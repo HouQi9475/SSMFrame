@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leo.ssm.mapper.ItemsCustomMapper">
+ <!-- 定义商品查询的SQL片段 ,商品查询条件 -->
+	<sql id="query_items_where">
+		<where>
+			<!-- 使用动态SQL，通过if判断满足SQL拼接 商品的查询条件通过itemsQueryVo中的itemsCustom属性传递 -->
+			<if test="itemsCustom!=null">
+				<if test="itemsCustom.name!=null and itemsCustom.name!=''">
+					items.name like '%${itemsCustom.name}%'
+				</if>
+			</if>
+		</where>
+	</sql>
+	<!-- 查询商品信息 resultType 建议使用扩展对象，以防查询中有子查询时items中属性不支持，在扩展类中添加 -->
+	<select id="queryItems" parameterType="com.leo.ssm.po.ItemsQueryVo"
+		resultType="com.leo.ssm.po.ItemsCustom">
+		select * from items
+		<where>
+			<include refid="query_items_where"></include>
+		</where>
+	</select>
+</mapper>
